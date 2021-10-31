@@ -1,0 +1,50 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/DMux8Way.hdl
+
+/**
+ * 8-way demultiplexor:
+ * {a, b, c, d, e, f, g, h} = {in, 0, 0, 0, 0, 0, 0, 0} if sel == 000
+ *                            {0, in, 0, 0, 0, 0, 0, 0} if sel == 001
+ *                            etc.
+ *                            {0, 0, 0, 0, 0, 0, 0, in} if sel == 111
+ */
+
+CHIP DMux8Way {
+    IN in, sel[3];
+    OUT a, b, c, d, e, f, g, h;
+
+    PARTS:
+    // Put your code here:
+
+    Or(a=sel[0], b=false, out=b0t);
+    Or(a=sel[1], b=false, out=b1t);
+    Or(a=sel[2], b=false, out=b2t);
+    Not(in=b0t, out=b0f);
+    Not(in=b1t, out=b1f);
+    Not(in=b2t, out=b2f);
+
+    And(a=b1f, b=b0f, out=b00t);
+    And(a=b1f, b=b0t, out=b01t);
+    And(a=b1t, b=b0f, out=b10t);
+    And(a=b1t, b=b0t, out=b11t);
+
+    And(a=b2f, b=b00t, out=b000t);
+    And(a=b2f, b=b01t, out=b001t);
+    And(a=b2f, b=b10t, out=b010t);
+    And(a=b2f, b=b11t, out=b011t);
+    And(a=b2t, b=b00t, out=b100t);
+    And(a=b2t, b=b01t, out=b101t);
+    And(a=b2t, b=b10t, out=b110t);
+    And(a=b2t, b=b11t, out=b111t);
+
+    And(a=b000t, b=in, out=a);
+    And(a=b001t, b=in, out=b);
+    And(a=b010t, b=in, out=c);
+    And(a=b011t, b=in, out=d);
+    And(a=b100t, b=in, out=e);
+    And(a=b101t, b=in, out=f);
+    And(a=b110t, b=in, out=g);
+    And(a=b111t, b=in, out=h);
+}
